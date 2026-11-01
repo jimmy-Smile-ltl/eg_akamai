@@ -29,6 +29,10 @@ cookie*.json
 logs/
 *.log
 
+# Dataset run artifacts: the CSVs are published, per-site check results are not
+datasets/akamai_customers/akamai_check.*
+datasets/akamai_customers/_tmp_test/
+
 # OS noise
 .DS_Store
 Thumbs.db

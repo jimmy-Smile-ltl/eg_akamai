@@ -171,6 +171,13 @@ eg_akamai/
 ├── examples/
 │   ├── README.md                # 24 行样本怎么读
 │   └── sample_sweep.json        # 24 行真实结果摘录
+├── datasets/
+│   └── akamai_customers/        # 官网公开客户清单（304 案例 / 268 主机）+ 采集/检测脚本
+│       ├── README.md
+│       ├── stories.csv
+│       ├── sites.csv
+│       ├── collect.py
+│       └── check_akamai.py
 ├── tests/test_offline.py        # 30 条离线断言，不联网
 ├── docs/                        # PLAYBOOK / SITE_FLOW / BOUNDARIES / TOOLS
 ├── CONTRIBUTING.md              # 判据改动与夹具提交规则
@@ -194,6 +201,21 @@ eg_akamai/
 夹具已检查：不含有效 cookie、token 已过期、无个人数据。来源与 sha256 见
 [data/fixtures/MANIFEST.md](data/fixtures/MANIFEST.md)。
 
+## 公开的官网客户清单
+
+另一类和扫描语料分开的数据：`datasets/akamai_customers/` 从 akamai.com 的
+公开 customer story 页提取客户索引（2026-09-17 快照）。
+
+- **304** 条案例、**273** 条带客户网址、**268** 个去重主机；
+- 只含标题、行业、地点、公开网址等元数据，**不含正文、PDF、图片**；
+- 31 条案例没有外部客户链接；5 个主机对应两条案例；
+- 采集脚本 `collect.py`、检测脚本 `check_akamai.py` 一并开源。
+
+这份清单回答的是「**官网公开列过谁**」，不是「现在谁还在用 Akamai」——
+2026-09-17 的首页级检测里，273 条网址只有 100 条还能看到 Akamai 信号。
+它也不是本地那份 282 万的第三方候选池；字段、口径和复现方式见
+[datasets/akamai_customers/README.md](datasets/akamai_customers/README.md)。
+
 ## 研究规模（公开仓库之外）
 
 仓库里的 7 份夹具是"每种形态各一张"，不是全部研究对象。判据和变体的结论来自
@@ -202,7 +224,7 @@ eg_akamai/
 
 | 口径 | 主机 | 注册域 | 说明 |
 |---|---:|---:|---|
-| 候选发现池 | — | 2,821,720 | Majestic / Tranco / ccTLD / Umbrella 四份名单并集；只做 DNS / CNAME 发现，未逐站请求 |
+| 第三方发现池（本地，不发布） | — | 2,821,720 | Majestic / Tranco / ccTLD / Umbrella 四份名单并集；只做 DNS / CNAME 发现，未逐站请求 |
 | 首页扫描 | 39,796 | 36,309 | 45,590 行探测记录 |
 | 深链 / 路由级 | 3,998 | 3,951 | 每台主机多条路径 |
 | 首页 + 深链对照 | 21,484 | 20,267 | 涌现实验：同一个站分别看首页和深链 |
@@ -219,9 +241,10 @@ eg_akamai/
 **这些数据不随仓库发布**：`.gitignore` 排除 `data/full/`、`data/corpus_sweep*.json`
 以及所有 cookie / HAR / session 文件；仓库里只有脱敏后的固定夹具。
 
-读这张表要注意：候选池的 282 万只是 DNS 发现名单，不等于逐站发过请求；各行
+读这张表要注意：第三方池的 282 万只是 DNS 发现名单，不等于逐站发过请求；各行
 之间也不互斥（同一台主机可能既在首页扫描里，也在深链实验里），所以只有标为
-**去重** 的两行是并集。
+**去重** 的两行是并集。公开的官网客户清单（268 主机）不在这张表里，它来自
+akamai.com 自己列出的案例，见上一节。
 
 ## 离线回归
 

@@ -14,7 +14,7 @@
 | 文档修正（流程、字段、结论） | ⭐⭐⭐ | 特别是"为什么"写错的地方 |
 | 新的变体解法（A0/A/B/canonical/hub 之外） | ⭐⭐ | 先开 issue 描述现象，再写代码 |
 | classic sensor / captcha / PX / CF / DataDome 求解 | ❌ | 超出范围，见 [BOUNDARIES](docs/BOUNDARIES.md) |
-| 站点清单、"能爬 XX 站"的 PR | ❌ | 不收录语料 |
+| 第三方站点清单 / 扫描语料 / "能爬 XX 站" | ❌ | 不收录；公开的 akamai.com 客户案例清单是固定数据集，见 [`datasets/akamai_customers/`](datasets/akamai_customers/) |
 
 ## 2. 提交判据改动
 
@@ -48,14 +48,18 @@ PY
 
 ## 4. 代码风格
 
-- Python 3.9+；只用标准库 + `curl_cffi`；
+- Python 3.9+；`gatekit/` 只用标准库 + `curl_cffi`；
+  `datasets/akamai_customers/` 的采集脚本另需 `beautifulsoup4`（只做 HTML 解析），
+  检测脚本可选 `dnspython`；
 - `judges.py` **不得**引入网络、时钟、文件系统依赖——它是离线可测的基础；
 - 网络代码放 `interstitial.py` / `client.py`，并且要能接受 `proxy=""`（直连）；
-- 不新增运行时依赖，除非有不可替代的理由（TLS 指纹是唯一已有的例外）。
+- `gatekit/` 不新增运行时依赖，除非有不可替代的理由（TLS 指纹是唯一已有的例外）。
 
 ## 5. 不要做的事
 
 - 不要提交全量扫描结果、cookie jar、HAR、session 快照；
+- 不要提交 `datasets/akamai_customers/akamai_check.*` 这类逐站检测结果
+  （`.gitignore` 已排除；数据集只发来源清单，不发扫描结论）；
 - 不要在 CI 里跑真站（挑战依赖实时 token 与网络，结果不可重复）；
 - 不要为了"支持更多站"放宽 `content_like` 或加白名单——先写清判据；
 - 不要在 PR 里贴有效 token、真实账号或目标的私有接口。
