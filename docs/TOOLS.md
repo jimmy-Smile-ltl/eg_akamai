@@ -243,6 +243,7 @@ inv.save_snapshot(snap, "auto", data_dir="data")
 | `data/fixtures/synthetic/` | 3 份构造响应（小页 / 大页 / compact 传感器） |
 | `data/fixtures/MANIFEST.md` | 来源、抓取日期、体积、sha256、代表什么 |
 | `examples/sample_sweep.json` | 24 行真实结果摘录，覆盖五种桶 |
+| `datasets/akamai_customers/` | akamai.com 公开客户清单与采集/检测脚本；不参与 gatekit 判据 |
 
 离线回放示例：
 
@@ -265,3 +266,7 @@ python tests/test_offline.py -v     # 逐条打印
 
 不依赖 pytest；返回码 0/1，可直接进 CI。真站回归**不随仓库发布**——它需要
 网络和实时挑战，属于使用者自己的环境。
+
+---
+
+返回 [docs 索引](README.md) · [仓库根目录](../README.md)。

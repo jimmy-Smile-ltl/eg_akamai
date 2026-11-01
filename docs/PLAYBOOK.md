@@ -260,3 +260,7 @@ python -m gatekit solve "https://2ndstreet.jp/search?category=810032"
 1. 探测只打 `/` 是结构性盲区；
 2. 分析的核心是**逐路由判**，不是判站点；
 3. 解决只需 3 秒——**难的不是求解，是知道该解哪条路由**。
+
+---
+
+返回 [docs 索引](README.md) · [仓库根目录](../README.md)。

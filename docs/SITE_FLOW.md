@@ -263,3 +263,7 @@ print(judges.parse_interstitial(open('data/fixtures/real/zara_shell.html',encodi
 
 判断标准始终是：**有没有一个可执行的通关动作**（有 token 能提交、有端点能
 POST）。没有，就只是墙。
+
+---
+
+返回 [docs 索引](README.md) · [仓库根目录](../README.md)。

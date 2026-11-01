@@ -126,3 +126,7 @@ cookie 和边缘拒绝页，结果写 `akamai_check.csv/.json`（已被 `.gitign
 - 本目录的代码与仓库其他部分一样使用 MIT；对数据本身不主张额外权利，
   转载/再分发请注明来源 `akamai.com`。
 - 本项目与 Akamai 无关联，未获其背书。
+
+---
+
+返回 [datasets 索引](../README.md) · [仓库根目录](../../README.md)。
