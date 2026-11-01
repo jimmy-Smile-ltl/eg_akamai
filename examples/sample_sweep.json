@@ -1,0 +1,290 @@
+[
+ {
+  "host": "iberdrola.com",
+  "ok": true,
+  "len": 457297,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 4.2
+ },
+ {
+  "host": "seg-social.es",
+  "ok": true,
+  "len": 114398,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 2.0
+ },
+ {
+  "host": "bgu.ac.il",
+  "ok": true,
+  "len": 273821,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 10.0
+ },
+ {
+  "host": "escuelaosteopatiamadrid.com",
+  "ok": true,
+  "len": 180575,
+  "status": 200,
+  "gate": "passed",
+  "origin_status": null,
+  "via": "POST",
+  "err": null,
+  "secs": 4.4
+ },
+ {
+  "host": "forum.cl",
+  "ok": true,
+  "len": 49362,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 2.4
+ },
+ {
+  "host": "appli-intramuros.com",
+  "ok": true,
+  "len": 54880,
+  "status": 200,
+  "gate": "passed",
+  "origin_status": null,
+  "via": "POST",
+  "err": null,
+  "secs": 5.9
+ },
+ {
+  "host": "davidshield.com",
+  "ok": true,
+  "len": 148611,
+  "status": 200,
+  "gate": "passed",
+  "origin_status": null,
+  "via": "POST",
+  "err": null,
+  "secs": 3.9
+ },
+ {
+  "host": "crcresearch.org",
+  "ok": true,
+  "len": 17630,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 4.4
+ },
+ {
+  "host": "torreiberdrola.es",
+  "ok": true,
+  "len": 98282,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 4.6
+ },
+ {
+  "host": "zarahome.com",
+  "ok": true,
+  "len": 871033,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 2.5
+ },
+ {
+  "host": "stradivarius.com",
+  "ok": true,
+  "len": 1075077,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 4.0
+ },
+ {
+  "host": "oysho.com",
+  "ok": true,
+  "len": 783350,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 1.4
+ },
+ {
+  "host": "bershka.com",
+  "ok": true,
+  "len": 310968,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 2.0
+ },
+ {
+  "host": "lefties.com",
+  "ok": true,
+  "len": 98408,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 2.5
+ },
+ {
+  "host": "pullandbear.com",
+  "ok": true,
+  "len": 648144,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 1.6
+ },
+ {
+  "host": "zara.com",
+  "ok": true,
+  "len": 641405,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 2.0
+ },
+ {
+  "host": "massimodutti.com",
+  "ok": true,
+  "len": 208615,
+  "status": 200,
+  "gate": null,
+  "origin_status": null,
+  "via": "A0",
+  "err": null,
+  "secs": 1.7
+ },
+ {
+  "host": "kasikornbank.com",
+  "ok": false,
+  "len": 6182,
+  "status": 200,
+  "gate": "passed",
+  "origin_status": 200,
+  "via": "POST",
+  "err": "闸门已过但内容过短（200/6182B）",
+  "secs": 17.0
+ },
+ {
+  "host": "training.oysho.com",
+  "ok": false,
+  "len": 4105,
+  "status": 200,
+  "gate": "passed",
+  "origin_status": 200,
+  "via": "POST",
+  "err": "闸门已过但内容过短（200/4105B）",
+  "secs": 6.8
+ },
+ {
+  "host": "wb-ookura.com",
+  "ok": false,
+  "len": 2417,
+  "status": 200,
+  "gate": "passed",
+  "origin_status": 503,
+  "via": "POST",
+  "err": "闸门已过，源站 503（2417B，维护页）",
+  "secs": 8.5
+ },
+ {
+  "host": "amazon.co.uk",
+  "ok": false,
+  "len": 2012,
+  "status": 202,
+  "gate": null,
+  "origin_status": null,
+  "via": "POST",
+  "err": "CloudFront 边缘（DNS 摆动，非闸门；202/2012B）",
+  "secs": 3.8,
+  "vendor": {
+   "vendor": "aws-waf",
+   "detail": "x-amzn-waf-action=challenge goku=True awswaf=True",
+   "status": 202,
+   "len": 2012
+  }
+ },
+ {
+  "host": "amazon.ca",
+  "ok": false,
+  "len": 2012,
+  "status": 202,
+  "gate": null,
+  "origin_status": null,
+  "via": "POST",
+  "err": "CloudFront 边缘（DNS 摆动，非闸门；202/2012B）",
+  "secs": 6.7,
+  "vendor": {
+   "vendor": "aws-waf",
+   "detail": "x-amzn-waf-action=challenge goku=True awswaf=True",
+   "status": 202,
+   "len": 2012
+  }
+ },
+ {
+  "host": "a.co",
+  "ok": false,
+  "len": 2010,
+  "status": 202,
+  "gate": null,
+  "origin_status": null,
+  "via": "POST",
+  "err": "CloudFront 边缘（DNS 摆动，非闸门；202/2010B）",
+  "secs": 10.9,
+  "vendor": {
+   "vendor": "akamai",
+   "detail": "bm-verify/akam-logo 插页",
+   "status": 200,
+   "len": 2122
+  }
+ },
+ {
+  "host": "amzn.com",
+  "ok": false,
+  "len": 2010,
+  "status": 202,
+  "gate": null,
+  "origin_status": null,
+  "via": "POST",
+  "err": "CloudFront 边缘（DNS 摆动，非闸门；202/2010B）",
+  "secs": 6.5,
+  "vendor": {
+   "vendor": "akamai",
+   "detail": "bm-verify/akam-logo 插页",
+   "status": 200,
+   "len": 2167
+  }
+ }
+]

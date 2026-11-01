@@ -1,0 +1,35 @@
+# Byte-compiled / caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local corpus and run artifacts are deliberately NOT published.
+# The repository ships a 24-row sample sweep (examples/) and hand-picked
+# fixtures (data/fixtures/); everything below stays on the researcher's disk.
+data/full/
+data/local/
+data/corpus_sweep*.json
+data/inventory_*.json
+data/*.html
+data/*.json
+!data/fixtures/
+
+# Never commit live session material
+*.cookies
+cookies*.txt
+cookie*.json
+*.har
+*.session
+logs/
+*.log
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
