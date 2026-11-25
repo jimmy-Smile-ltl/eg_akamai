@@ -1,0 +1,57 @@
+[
+ {
+  "url": "https://www.apahotel.com/",
+  "run": 1,
+  "solve_secs": 32.4,
+  "abck_status": "-1",
+  "validated": false,
+  "posts": 15,
+  "recheck": 200,
+  "refused": false,
+  "len": 482440
+ },
+ {
+  "url": "https://www.apahotel.com/",
+  "run": 2,
+  "solve_secs": 50.6,
+  "abck_status": "-1",
+  "validated": false,
+  "posts": 15,
+  "recheck": 200,
+  "refused": false,
+  "len": 482440
+ },
+ {
+  "url": "https://www.apahotel.com/",
+  "run": 3,
+  "solve_secs": 48.1,
+  "abck_status": "-1",
+  "validated": false,
+  "posts": 16,
+  "recheck": 200,
+  "refused": false,
+  "len": 482440
+ },
+ {
+  "url": "https://www.akamai.com/",
+  "run": 1,
+  "solve_secs": 23.1,
+  "abck_status": "0",
+  "validated": true,
+  "posts": 19,
+  "recheck": 200,
+  "refused": false,
+  "len": 219382
+ },
+ {
+  "url": "https://www.akamai.com/",
+  "run": 2,
+  "solve_secs": 23.5,
+  "abck_status": "-1",
+  "validated": false,
+  "posts": 22,
+  "recheck": 200,
+  "refused": false,
+  "len": 219383
+ }
+]

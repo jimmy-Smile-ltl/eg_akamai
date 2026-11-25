@@ -16,6 +16,10 @@
 | classic sensor / captcha / PX / CF / DataDome 求解 | ❌ | 超出范围，见 [BOUNDARIES](docs/BOUNDARIES.md) |
 | 第三方站点清单 / 扫描语料 / "能爬 XX 站" | ❌ | 不收录；公开的 akamai.com 客户案例清单是固定数据集，见 [`datasets/akamai_customers/`](datasets/akamai_customers/) |
 
+例外：[`wre/`](wre/README.md) 子专题保留一份 268 主机的一次性评估台账
+（样本即上面的公开客户清单），只含状态码与 `_abck` 状态位，不含 cookie /
+token；脚本可重算，不作为 gatekit 的支持声明。
+
 ## 2. 提交判据改动
 
 判据在 `gatekit/judges.py`，全部是纯函数。改它必须同时做到：
@@ -60,6 +64,8 @@ PY
 - 不要提交全量扫描结果、cookie jar、HAR、session 快照；
 - 不要提交 `datasets/akamai_customers/akamai_check.*` 这类逐站检测结果
   （`.gitignore` 已排除；数据集只发来源清单，不发扫描结论）；
+- 例外：`wre/results/` 的 268 站评估台账允许保留（固定样本、可重算、只含状态与
+  verdict，不含 cookie / token）；不要扩充站点，也不要把它当通用扫描语料；
 - 不要在 CI 里跑真站（挑战依赖实时 token 与网络，结果不可重复）；
 - 不要为了"支持更多站"放宽 `content_like` 或加白名单——先写清判据；
 - 不要在 PR 里贴有效 token、真实账号或目标的私有接口。

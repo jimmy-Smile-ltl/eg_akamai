@@ -1,0 +1,887 @@
+<title>wre 实测台账</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#F1F3F0;
+  --surface:#FAFBF8;
+  --surface-2:#E8EDE7;
+  --ink:#121A16;
+  --muted:#58665E;
+  --line:#D2DAD3;
+  --accent:#0B6661;
+  --accent-soft:#DDEDEA;
+  --pass:#1D7352;
+  --pass-soft:#E0EFE6;
+  --warn:#876013;
+  --warn-soft:#F4EBDA;
+  --fail:#963B28;
+  --fail-soft:#F2E3DE;
+  --neutral:#67716C;
+  --neutral-soft:#E8ECE8;
+  --bench-bg:#0B1412;
+  --bench-ink:#D8E4DE;
+  --bench-dim:#7F928B;
+  --bench-line:rgba(152,192,176,.16);
+  --font-sans:"Instrument Sans","Noto Sans SC","PingFang SC","Microsoft YaHei",ui-sans-serif,system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0B1210;
+    --surface:#111A17;
+    --surface-2:#17221E;
+    --ink:#E6EDE8;
+    --muted:#93A29A;
+    --line:#24322C;
+    --accent:#5FBDB2;
+    --accent-soft:#13302C;
+    --pass:#6BCB9B;
+    --pass-soft:#112E22;
+    --warn:#E2B667;
+    --warn-soft:#2B2415;
+    --fail:#E4957F;
+    --fail-soft:#301C17;
+    --neutral:#9AA6A0;
+    --neutral-soft:#1C2823;
+    --bench-bg:#080F0D;
+    --bench-ink:#D8E4DE;
+    --bench-dim:#7F928B;
+    --bench-line:rgba(152,192,176,.18);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0B1210;
+  --surface:#111A17;
+  --surface-2:#17221E;
+  --ink:#E6EDE8;
+  --muted:#93A29A;
+  --line:#24322C;
+  --accent:#5FBDB2;
+  --accent-soft:#13302C;
+  --pass:#6BCB9B;
+  --pass-soft:#112E22;
+  --warn:#E2B667;
+  --warn-soft:#2B2415;
+  --fail:#E4957F;
+  --fail-soft:#301C17;
+  --neutral:#9AA6A0;
+  --neutral-soft:#1C2823;
+  --bench-bg:#080F0D;
+  --bench-ink:#D8E4DE;
+  --bench-dim:#7F928B;
+  --bench-line:rgba(152,192,176,.18);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:400 16px/1.75 var(--font-sans);
+  -webkit-font-smoothing:antialiased;
+}
+main{max-width:1080px;margin:0 auto;padding:0 30px 88px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+::selection{background:var(--accent-soft);color:var(--ink)}
+
+.mast{
+  display:flex;justify-content:space-between;align-items:baseline;
+  gap:14px 28px;flex-wrap:wrap;
+  padding:40px 0 16px;border-bottom:1px solid var(--line);
+}
+.mast .mono{
+  font:500 11px/1.5 var(--font-mono);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+}
+.mast .mono b{color:var(--ink);font-weight:600}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.bench code{background:rgba(255,255,255,.08);color:var(--bench-ink)}
+
+.hero{padding:52px 0 0}
+.kicker{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.kicker .mono{font:500 11px/1.4 var(--font-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.kicker .ver{
+  font:500 10.5px/1 var(--font-mono);letter-spacing:.08em;
+  color:var(--muted);border:1px solid var(--line);border-radius:2px;
+  padding:4px 7px;
+}
+h1{
+  font:600 clamp(40px,6.4vw,70px)/1.06 var(--font-sans);
+  letter-spacing:-.022em;margin:18px 0 20px;text-wrap:balance;
+}
+h1 .latin{font-family:var(--font-mono);font-weight:500;letter-spacing:-.04em}
+.lede{max-width:780px;margin:0;font-size:19px;line-height:1.7;color:var(--ink);text-wrap:pretty}
+.hero-meta{
+  margin-top:22px;display:flex;flex-wrap:wrap;gap:6px 18px;
+  font:400 11.5px/1.5 var(--font-mono);letter-spacing:.06em;color:var(--muted);
+}
+.hero-meta span::after{content:"·";margin-left:18px;color:var(--line)}
+.hero-meta span:last-child::after{content:none;margin-left:0}
+
+.bench{
+  margin:40px 0 0;background:var(--bench-bg);color:var(--bench-ink);
+  border:1px solid #1C2A25;border-radius:4px;padding:18px 24px 16px;
+  position:relative;overflow:hidden;
+  box-shadow:0 20px 40px -34px rgba(9,20,16,.6);
+}
+.bench::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(var(--bench-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--bench-line) 1px,transparent 1px);
+  background-size:30px 30px;
+  opacity:.35;
+}
+.bench > *{position:relative}
+.bench-top{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font:500 10px/1.4 var(--font-mono);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--bench-dim);
+  padding-bottom:14px;border-bottom:1px solid var(--bench-line);
+}
+.bench-top .live{display:inline-flex;align-items:center;gap:7px;color:var(--bench-ink)}
+.bench-top .live i{width:6px;height:6px;background:#6ACF9E;border-radius:50%;display:inline-block}
+.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.readout{padding:20px 20px 16px;border-left:1px solid var(--bench-line)}
+.readout:first-child{padding-left:2px;border-left:0}
+.ro-label{display:block;font:500 9.5px/1.4 var(--font-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--bench-dim)}
+.ro-value{display:block;margin:8px 0 3px;font:600 clamp(34px,5.2vw,52px)/1 var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.03em;color:var(--bench-ink)}
+.readout.pass .ro-value{color:#6ACF9E}
+.readout.heat .ro-value{color:#E2B667}
+.readout.gain .ro-value{color:#79C9C2}
+.ro-sub{display:block;font:400 11.5px/1.55 var(--font-sans);color:var(--bench-dim)}
+.barbox{margin-top:6px;border-top:1px solid var(--bench-line);padding-top:14px}
+.bar-label{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:400 10px/1.4 var(--font-mono);letter-spacing:.08em;color:var(--bench-dim);margin-bottom:9px}
+.segbar{display:flex;gap:2px;height:9px;border-radius:1px;overflow:hidden}
+.seg{display:block;height:100%}
+.seg.pass{background:#3F9E73;flex:3}
+.seg.warn{background:#B78A3B;flex:8}
+.seg.fail{background:#A5523F;flex:16}
+.legend{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:10px;font:400 10px/1.4 var(--font-mono);letter-spacing:.08em;color:var(--bench-dim)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:1px;display:inline-block}
+.dot.pass{background:#3F9E73}
+.dot.warn{background:#B78A3B}
+.dot.fail{background:#A5523F}
+
+.takeaways{
+  display:grid;grid-template-columns:1fr 1fr;gap:34px;
+  border-bottom:1px solid var(--line);padding:30px 0 32px;
+}
+.take .tag{display:block;font:500 10.5px/1.4 var(--font-mono);letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
+.take.can .tag{color:var(--pass)}
+.take.cannot .tag{color:var(--fail)}
+.take p{margin:0;font-size:15px;line-height:1.7;color:var(--ink);text-wrap:pretty}
+.take p b{font-weight:600}
+
+.indexnav{
+  display:flex;flex-wrap:wrap;gap:4px 0;
+  padding:16px 0 0;
+  font:500 10.5px/1.6 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;
+}
+.indexnav a{color:var(--muted);padding:0 10px;border-right:1px solid var(--line)}
+.indexnav a:first-child{padding-left:0}
+.indexnav a:last-child{border-right:0}
+.indexnav a:hover{color:var(--accent);text-decoration:none}
+
+.chapter{
+  display:grid;grid-template-columns:112px minmax(0,1fr);gap:38px;
+  border-top:1px solid var(--line);padding:44px 0 8px;
+}
+.chapter:first-of-type{border-top:0}
+.gutter{padding-top:4px}
+.idx{display:block;font:500 25px/1 var(--font-mono);letter-spacing:-.02em;color:var(--accent)}
+.tag{display:block;margin-top:10px;font:500 10px/1.5 var(--font-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.body h2{
+  margin:0 0 16px;font:600 27px/1.25 var(--font-sans);letter-spacing:-.012em;text-wrap:balance;
+}
+.body h3{
+  margin:30px 0 12px;font:600 17px/1.4 var(--font-sans);letter-spacing:-.005em;
+}
+.body h3 .mono-mark{font:500 11px/1 var(--font-mono);letter-spacing:.08em;color:var(--accent);margin-right:8px}
+.body p{margin:0 0 15px;max-width:70ch;line-height:1.78;text-wrap:pretty}
+.body p.note{
+  font-size:14px;color:var(--muted);border-left:2px solid var(--line);
+  padding:2px 0 2px 14px;margin:18px 0;
+}
+.body p.note b{color:var(--ink)}
+.body strong{font-weight:600}
+.body ul{margin:0 0 16px;padding-left:18px;max-width:70ch}
+.body ul li{margin:0 0 8px;line-height:1.72}
+.body ul li::marker{color:var(--accent)}
+
+.code{
+  background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:3px;padding:15px 17px;overflow-x:auto;margin:16px 0 18px;
+  font:400 12.5px/1.72 var(--font-mono);color:var(--ink);white-space:pre;tab-size:2;
+}
+.terminal{
+  background:var(--bench-bg);color:var(--bench-ink);
+  border:1px solid #1C2A25;border-radius:3px;padding:15px 17px;overflow-x:auto;
+  font:400 12.5px/1.8 var(--font-mono);margin:16px 0 18px;white-space:pre;
+}
+.terminal .dim{color:var(--bench-dim)}
+.terminal .ok{color:#6ACF9E}
+.terminal .bad{color:#E4957F}
+
+.stats{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  margin:18px 0 22px;
+}
+.stat{background:var(--surface);padding:15px 16px 13px}
+.stat .n{display:block;font:600 27px/1 var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat .n small{font-size:14px;letter-spacing:0;color:var(--muted);font-weight:500}
+.stat .t{display:block;margin-top:5px;font:400 11.5px/1.5 var(--font-sans);color:var(--muted)}
+
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:20px 0 22px}
+.step{border-top:2px solid var(--accent);padding-top:11px}
+.step .n{display:block;font:500 10px/1.4 var(--font-mono);letter-spacing:.16em;color:var(--accent)}
+.step .t{display:block;margin:6px 0 5px;font:600 14.5px/1.4 var(--font-sans)}
+.step .d{display:block;font:400 12.5px/1.6 var(--font-sans);color:var(--muted)}
+
+.tablewrap{
+  overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--surface);
+  margin:16px 0 20px;
+}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:600px}
+th{
+  font:500 10px/1.4 var(--font-mono);letter-spacing:.14em;text-transform:uppercase;
+  text-align:left;color:var(--muted);background:var(--surface-2);
+  padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6}
+tr:last-child td{border-bottom:0}
+td.num,th.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.host{font-family:var(--font-mono);font-size:12.5px;letter-spacing:-.01em}
+td.note{color:var(--muted);font-size:13px}
+td.muted{color:var(--muted)}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  font:500 9.5px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 7px;border-radius:2px;white-space:nowrap;
+}
+.pill.pass{color:var(--pass);background:var(--pass-soft)}
+.pill.warn{color:var(--warn);background:var(--warn-soft)}
+.pill.fail{color:var(--fail);background:var(--fail-soft)}
+.pill.neutral{color:var(--neutral);background:var(--neutral-soft)}
+.inc{
+  display:inline-block;font:500 10px/1 var(--font-mono);letter-spacing:.06em;
+  color:var(--accent);background:var(--accent-soft);padding:5px 7px;border-radius:2px;white-space:nowrap;
+}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+.chip{
+  font:500 10px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:2px;
+  padding:7px 9px;cursor:pointer;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip span{color:var(--accent);margin-left:6px}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip[aria-pressed="true"] span{color:var(--bg)}
+
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:0 36px;margin:8px 0 8px}
+.def{display:grid;grid-template-columns:128px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.55}
+.def:last-child{border-bottom:0}
+.def .k{font:500 11.5px/1.6 var(--font-mono);letter-spacing:-.01em;color:var(--accent);overflow-wrap:anywhere}
+.def .v{color:var(--muted)}
+.def .v b{color:var(--ink);font-weight:600}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 36px}
+.scriptlist{display:grid;grid-template-columns:1fr;gap:0}
+.script{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.55}
+.script:last-child{border-bottom:0}
+.script .k{font:500 11.5px/1.55 var(--font-mono);color:var(--ink);overflow-wrap:anywhere}
+.script .v{color:var(--muted)}
+code{font-family:var(--font-mono);font-size:.87em;background:var(--surface-2);padding:1px 5px;border-radius:2px}
+.code code,.terminal code{background:none;padding:0;font-size:inherit}
+
+.quote{
+  border-left:2px solid var(--accent);padding:2px 0 2px 16px;margin:20px 0 18px;
+  font-size:16px;line-height:1.7;color:var(--ink);
+}
+.quote em{font-style:normal;color:var(--accent);font-weight:600}
+
+.ledger-controls{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-wrap:wrap;margin:18px 0 12px;
+}
+.ledger-controls .chips{margin:0}
+.search{
+  font:400 12.5px/1.4 var(--font-mono);color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:8px 10px;min-width:220px;max-width:320px;flex:1 1 220px;
+}
+.search::placeholder{color:var(--muted)}
+.ledger-wrap{overflow:auto;max-height:560px;border:1px solid var(--line);border-radius:4px;background:var(--surface);margin:0 0 12px}
+.ledger-table{min-width:720px}
+.ledger-table thead th{position:sticky;top:0;z-index:1}
+.ledger-table .host-cell{display:flex;flex-direction:column;gap:2px;min-width:230px}
+.ledger-table .host{font-family:var(--font-mono);font-size:12.5px;color:var(--ink);line-height:1.4}
+.ledger-table .host-sub{font:400 11px/1.45 var(--font-sans);color:var(--muted);white-space:normal}
+.ledger-foot{display:flex;justify-content:space-between;gap:8px 20px;flex-wrap:wrap;margin-top:4px;font:400 10.5px/1.5 var(--font-mono);letter-spacing:.04em;color:var(--muted)}
+.ledger-foot .count{color:var(--ink)}
+.only-narrow{display:none}
+.ledger-empty{margin:10px 0 20px;font:400 13px/1.6 var(--font-mono);color:var(--muted)}
+
+.foot{
+  border-top:1px solid var(--line);margin-top:52px;padding-top:22px;
+  display:flex;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;
+  font:400 10.5px/1.65 var(--font-mono);letter-spacing:.04em;color:var(--muted);
+}
+.foot b{color:var(--ink);font-weight:600}
+
+@media (max-width:860px){
+  .mast{padding-top:30px}
+  .readouts{grid-template-columns:1fr 1fr}
+  .readout:nth-child(3){border-left:0;padding-left:2px;border-top:1px solid var(--bench-line);padding-top:18px}
+  .readout:nth-child(4){border-top:1px solid var(--bench-line);padding-top:18px}
+  .takeaways{grid-template-columns:1fr;gap:24px}
+  .stats{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .defs,.two-col{grid-template-columns:1fr}
+  .chapter{grid-template-columns:minmax(0,1fr);gap:14px;padding-top:36px}
+  .body{min-width:0}
+  .gutter{display:flex;align-items:baseline;gap:12px;padding-top:0}
+  .idx{font-size:17px}
+  .tag{margin-top:0}
+  .body h2{font-size:24px}
+}
+@media (max-width:560px){
+  main{padding:0 20px 70px}
+  .lede{font-size:17px}
+  .bench{padding:16px 16px 14px}
+  .readout{padding:16px 12px 12px}
+  .ro-sub{font-size:10.5px}
+  .indexnav a{padding:0 8px;font-size:10px}
+  .stats{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}
+  .script{grid-template-columns:1fr;gap:2px}
+  .def{grid-template-columns:1fr;gap:2px}
+  .hero-meta span::after{content:none}
+  .ledger-controls{flex-direction:column;align-items:stretch}
+  .search{flex:0 0 auto;max-width:none;min-height:40px}
+  pre.code{white-space:pre-wrap;overflow-wrap:anywhere}
+  pre.code code{font-size:11.5px;line-height:1.7}
+  .ledger-table{min-width:0;width:100%}
+  .ledger-table th:nth-child(3),.ledger-table td:nth-child(3),
+  .ledger-table th:nth-child(4),.ledger-table td:nth-child(4),
+  .ledger-table th:nth-child(5),.ledger-table td:nth-child(5){display:none}
+  .ledger-table .host-cell{min-width:0}
+  .ledger-table .host{font-size:10.5px;overflow-wrap:anywhere}
+  .only-wide{display:none}
+  .only-narrow{display:inline}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+
+<main>
+  <header class="mast">
+    <div class="mono"><b>proofofbots / web-re-toolkit</b> · Akamai sidecar 实测</div>
+    <div class="mono">2026-11-25 · eg_akamai 子专题 · <b>wre</b></div>
+  </header>
+
+  <section class="hero">
+    <div class="kicker">
+      <span class="mono">Spectrum → Sensor → Verdict</span>
+      <span class="ver">wre-client-akamai 3.1.1</span>
+    </div>
+    <h1><span class="latin">wre</span> 实测台账</h1>
+    <p class="lede">一台本地 sidecar、268 个 Akamai 公开客户主机、每站一次 GET。它能越过 Akamai 的 classic sensor 吗——能，但只过一小部分。</p>
+    <div class="hero-meta">
+      <span>Windows 11</span>
+      <span>Python 3.12.3</span>
+      <span>国内网络直连</span>
+      <span>无代理</span>
+      <span>串行 · 每站一次 GET</span>
+    </div>
+  </section>
+
+  <section class="bench" aria-label="关键读数">
+    <div class="bench-top">
+      <span class="live"><i></i>RUN 2026-11-25 · 数据快照</span>
+      <span>268 HOSTS · 27 SOLVE ATTEMPTS</span>
+    </div>
+    <div class="readouts">
+      <div class="readout">
+        <span class="ro-label">Discover</span>
+        <span class="ro-value">268</span>
+        <span class="ro-sub">公开客户主机 · customer story 索引</span>
+      </div>
+      <div class="readout">
+        <span class="ro-label">Protected</span>
+        <span class="ro-value">27</span>
+        <span class="ro-sub">10.1% 命中 classic sensor</span>
+      </div>
+      <div class="readout pass">
+        <span class="ro-label">Validated</span>
+        <span class="ro-value">3</span>
+        <span class="ro-sub">11.1% 产出 <code>_abck = 0</code></span>
+      </div>
+      <div class="readout gain">
+        <span class="ro-label">Increments</span>
+        <span class="ro-value">2</span>
+        <span class="ro-sub">curl 403 → wre 200 · APA / akamai.com</span>
+      </div>
+    </div>
+    <div class="barbox">
+      <div class="bar-label"><span>27 次求解尝试的结局</span><span>其余 241 个站未求解</span></div>
+      <div class="segbar" role="img" aria-label="3 个 validated，8 个 unvalidated，16 个 failed">
+        <span class="seg pass"></span><span class="seg warn"></span><span class="seg fail"></span>
+      </div>
+      <div class="legend">
+        <span><i class="dot pass"></i>validated 3</span>
+        <span><i class="dot warn"></i>unvalidated 8</span>
+        <span><i class="dot fail"></i>failed 16</span>
+        <span>failed 占 59%</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="takeaways">
+    <div class="take can">
+      <span class="tag">能做的</span>
+      <p>在 5 个站上真正执行了 sensor 计算并产出 validated <code>_abck</code>：<b>IBM</b>（3/3）、<b>British Council</b>（2/3）、<b>Tokopedia</b>（3/3）、<b>Xero 登录页</b>（2/2）、<b>akamai.com</b>（1/2）。<b>APA 酒店</b>还拿到了 4/4 的稳定页面增量。</p>
+    </div>
+    <div class="take cannot">
+      <span class="tag">做不到的</span>
+      <p>interstitial / <code>bm-verify</code> 壳完全不支持；27 个受保护站里 <b>16 个</b> solve 失败；官方 demo 依赖的 Lee County 从本机直接 403，脚本根本没机会执行。</p>
+    </div>
+  </div>
+
+  <nav class="indexnav" aria-label="章节索引">
+    <a href="#object">01 对象</a>
+    <a href="#method">02 方法</a>
+    <a href="#install">03 安装</a>
+    <a href="#sweep">04 扫描</a>
+    <a href="#solve">05 求解</a>
+    <a href="#exp">06 实验</a>
+    <a href="#fail">07 失败</a>
+    <a href="#edge">08 边界</a>
+    <a href="#repro">09 复现</a>
+    <a href="#files">10 脚本与数据</a>
+    <a href="#compliance">11 合规</a>
+    <a href="#ledger">12 台账</a>
+  </nav>
+
+  <section class="chapter" id="object">
+    <div class="gutter"><span class="idx">01</span><span class="tag">Object</span></div>
+    <div class="body">
+      <h2>被测对象</h2>
+      <p><code>wre</code> 是一个 Rust 工具链，在主包本地起一个 sidecar 可执行文件 <code>wred</code>，在 V8 realm 里执行厂商自己的 sensor 脚本，并使用录制的 Mac 设备、行为与传输指纹。Python 客户端通过 JSON-RPC 驱动它。</p>
+      <div class="tablewrap">
+        <table>
+          <tbody>
+            <tr><td class="mono" style="width:150px">仓库</td><td><code>proofofbots/web-re-toolkit</code> · MIT · Rust</td></tr>
+            <tr><td class="mono">包 / 运行时</td><td><code>wre-client-akamai 3.1.1</code> / <code>wre-runtime 3.1.1</code></td></tr>
+            <tr><td class="mono">sidecar</td><td><code>wred.exe</code> · <span style="font-family:var(--font-mono)">61,314,560</span> bytes（win_amd64）</td></tr>
+            <tr><td class="mono">覆盖</td><td>classic V2/V3 sensor ✓ · pixel ✓ · PoW 已实现但未验证 · <b>interstitial ✗</b></td></tr>
+            <tr><td class="mono">官方验证站</td><td><code>login.xero.com</code>、<code>matrix.leeclerk.org</code>（Lee County search）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note"><b>注意覆盖边界：</b>interstitial / bm-verify 只做解析、不做求解；文档写明研究集里没有站点下发过这一类挑战，因此官方也没有 live 样本。</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="method">
+    <div class="gutter"><span class="idx">02</span><span class="tag">Method</span></div>
+    <div class="body">
+      <h2>方法：先证伪，再求解</h2>
+      <p>每一站都先证明“裸请求会被拒”，再交给 wre；否则 200 可能本来就 200，无法归因。全程串行、低频，只取公开首页。</p>
+      <div class="steps">
+        <div class="step"><span class="n">STEP 1</span><span class="t">curl 裸测</span><span class="d">Chrome UA、无 cookie；403 或 000 才说明存在传输层保护。</span></div>
+        <div class="step"><span class="n">STEP 2</span><span class="t">discover</span><span class="d"><code>protected=True</code> 且 <code>sensor=obfuscated</code> 才算候选。</span></div>
+        <div class="step"><span class="n">STEP 3</span><span class="t">solve</span><span class="d">产出 <code>_abck</code>、posts、telemetry，记录耗时。</span></div>
+        <div class="step"><span class="n">STEP 4</span><span class="t">request</span><span class="d">同 session 再 GET，比较 status 与内容长度。</span></div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th style="width:150px">判定</th><th>条件</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill pass">validated</span></td><td><code>_abck</code> field[1] == <span style="font-family:var(--font-mono)">0</span> 且 <code>validated=True</code></td></tr>
+            <tr><td><span class="pill warn">unvalidated</span></td><td>仍为 <code>-1</code>，但同 session 页面 200</td></tr>
+            <tr><td><span class="inc">increment</span></td><td>curl 403（或 000）→ wre 复查 200</td></tr>
+            <tr><td><span class="pill fail">failed</span></td><td>solve 报错 / 超时 / 被 403</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="install">
+    <div class="gutter"><span class="idx">03</span><span class="tag">Install</span></div>
+    <div class="body">
+      <h2>安装：一次镜像，61MB 二进制</h2>
+      <pre class="code"><code>py -3.12 -m venv venv
+venv\Scripts\python.exe -m pip install wre-client-akamai \
+  -i https://pypi.tuna.tsinghua.edu.cn/simple --timeout 120</code></pre>
+      <p>直连 PyPI 在 <code>files.pythonhosted.org</code> 反复 ReadTimeout；换清华镜像后 22.8MB wheel 以 10.9MB/s 一次装好。wheel 解压带出 61MB 的 <code>wred.exe</code>（V8 静态链接），首次运行不额外下载，启动 0.3–3.7s。</p>
+      <p class="note">专题固定在 <code>eg_akamai/wre/</code>；60MB+ 的 venv 与 <code>wred.exe</code> 不随仓库发布，脚本与台账只作为测试记录。</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="sweep">
+    <div class="gutter"><span class="idx">04</span><span class="tag">Sweep</span></div>
+    <div class="body">
+      <h2>扫描：268 站里只有 27 个受保护</h2>
+      <div class="stats">
+        <div class="stat"><span class="n">268</span><span class="t">discover 解析成功的主机</span></div>
+        <div class="stat"><span class="n">27</span><span class="t">protected · 10.1%</span></div>
+        <div class="stat"><span class="n">21</span><span class="t">标记为 <code>obfuscated</code></span></div>
+        <div class="stat"><span class="n">6</span><span class="t">仅标记为 <code>sensor</code></span></div>
+      </div>
+      <p>真正的 classic sensor 保护只有一个零头，其余 241 个站要么没有保护、要么连接失败。27 个受保护站里，21 个标记为 <code>obfuscated</code>，6 个只是 <code>sensor</code>。</p>
+      <p>后者并不代表更容易：British Council 成功，其余 5 个是 <code>no payload</code> / 超时 / 脚本错误。标签只是脚本形态，不是成功率。</p>
+      <p class="note">27 个站名全部在最后的台账里，可按“受保护”筛选查看。</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="solve">
+    <div class="gutter"><span class="idx">05</span><span class="tag">Solve</span></div>
+    <div class="body">
+      <h2>求解：3 个 validated，2 个真增量</h2>
+      <h3><span class="mono-mark">5.1</span><code>_abck</code> validated</h3>
+      <p>268 名单内 3 个，补充样本 2 个。只有 IBM、British Council、Tokopedia 保持稳定页面 200；Xero 本来就能访问，因此不进增量统计。</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>站点</th><th class="num">curl</th><th class="num">_abck</th><th class="num">复查</th><th>复现与备注</th></tr></thead>
+          <tbody>
+            <tr><td class="host">www.ibm.com</td><td class="num">303</td><td class="num"><b>0</b></td><td class="num">200 / 214,173</td><td>3/3 validated；6.0–7.6s，字节一致</td></tr>
+            <tr><td class="host">www.britishcouncil.org</td><td class="num">000</td><td class="num"><b>0</b></td><td class="num">200 / 101,830</td><td>2/3 validated；第二次 -1，页面不变</td></tr>
+            <tr><td class="host">www.tokopedia.com</td><td class="num">200</td><td class="num"><b>0</b></td><td class="num">200 / 113,762</td><td>3/3 validated；6.4–9.7s</td></tr>
+            <tr><td class="host">login.xero.com</td><td class="num">200</td><td class="num"><b>0</b></td><td class="num">200 / 43,195</td><td>2/2 validated；页面无增量</td></tr>
+            <tr><td class="host">www.akamai.com</td><td class="num">403</td><td class="num">0（1/2）</td><td class="num">200 / 219,382</td><td>页面 2/2 200；第二次 -1 仍 200</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3><span class="mono-mark">5.2</span>页面增量：curl 403 → wre 200</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>站点</th><th class="num">curl → wre</th><th class="num">_abck</th><th class="num">复查</th><th>结论</th></tr></thead>
+          <tbody>
+            <tr><td class="host">www.apahotel.com</td><td class="num">403 → 200</td><td class="num">-1</td><td class="num">482,454 首测<br>482,440 ×3</td><td><b>稳定增量</b>：4/4 页面 200，复跑字节一致</td></tr>
+            <tr><td class="host">www.akamai.com</td><td class="num">403 → 200</td><td class="num">0（1/2）</td><td class="num">219,382 / 219,383</td><td><b>稳定增量</b>：2/2 页面 200</td></tr>
+            <tr><td class="host">www.riachuelo.com.br</td><td class="num">403 → 200</td><td class="num">-1</td><td class="num">616,923</td><td>可疑：posts = 0</td></tr>
+            <tr><td class="host">www.xcaret.com</td><td class="num">403 → 200</td><td class="num">—</td><td class="num">503,882</td><td>可疑：solve 报 <code>sandbox stalled</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">另有 5 个站是 curl <code>000 → 200</code>（裸连接都建不起来），不能算工具带来的增量：britishcouncil、yatra、bio-techne、itv、usnews。</p>
+
+      <h3><span class="mono-mark">5.3</span>未验证、但页面 200（8）</h3>
+      <div class="chips" style="pointer-events:none">
+        <span class="chip">mailchimp</span>
+        <span class="chip">ANA · 183 posts</span>
+        <span class="chip">APA</span>
+        <span class="chip">guardicore</span>
+        <span class="chip">kleinanzeigen</span>
+        <span class="chip">riachuelo</span>
+        <span class="chip">xero.com · 47 posts</span>
+        <span class="chip">yatra</span>
+      </div>
+      <p style="margin-top:12px">ANA 发送了 183 条 posts、Xero 主站 47 条，<code>_abck</code> 仍是 <code>-1</code>。不是所有站都接受这份 telemetry；页面可访问不等于验证通过。</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="exp">
+    <div class="gutter"><span class="idx">06</span><span class="tag">Experiments</span></div>
+    <div class="body">
+      <h2>三个对照实验</h2>
+
+      <h3><span class="mono-mark">6.1</span>通过不靠 cookie，靠 TLS / HTTP-2 指纹</h3>
+      <p>把 wre 会话里的完整 Cookie 头（2,192 字符，含 <code>_abck</code>、<code>bm_sz</code>、<code>HCSESSIONID</code>、<code>visitorid</code>）原样交给普通 curl：</p>
+      <div class="terminal"><span class="dim">$</span> curl 无 cookie                <span class="dim">→</span> <span class="bad">403</span>
+<span class="dim">$</span> curl + wre cookie (2,192c)    <span class="dim">→</span> <span class="bad">403</span>
+<span class="dim">$</span> wre 同 session                 <span class="dim">→</span> <span class="ok">200 · 482,454 bytes</span></div>
+      <p><b>结论：</b>cookie 不是通过原因；<code>wreq-util</code> 的传输指纹才是。这也解释了 <code>_abck</code> 仍为 <code>-1</code> 时页面照样 200。</p>
+
+      <h3><span class="mono-mark">6.2</span><code>_abck</code> 不稳定，页面更稳</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>站点</th><th class="num">validated</th><th class="num">页面 200</th></tr></thead>
+          <tbody>
+            <tr><td class="host">www.ibm.com</td><td class="num">3/3</td><td class="num">3/3</td></tr>
+            <tr><td class="host">www.tokopedia.com</td><td class="num">3/3</td><td class="num">3/3</td></tr>
+            <tr><td class="host">www.britishcouncil.org</td><td class="num">2/3</td><td class="num">3/3</td></tr>
+            <tr><td class="host">login.xero.com</td><td class="num">2/2</td><td class="num">2/2</td></tr>
+            <tr><td class="host">www.akamai.com</td><td class="num">1/2</td><td class="num">2/2</td></tr>
+            <tr><td class="host">www.apahotel.com</td><td class="num">0/4</td><td class="num">4/4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>同站、同参数复跑，<code>_abck</code> 会随机落回 <code>-1</code>；页面 200 反而更稳定。验证状态与可访问性不是一回事。</p>
+
+      <h3><span class="mono-mark">6.3</span>PoW 分支从未触发</h3>
+      <p>所有站的 <code>_abck</code> field[4] 都是 <code>-1</code>，PoW 难度从未下发。与官方“PoW 已实现但未在真实站验证”的描述一致。</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="fail">
+    <div class="gutter"><span class="idx">07</span><span class="tag">Failures</span></div>
+    <div class="body">
+      <h2>27 个站里 16 个失败，五种模式</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>类型</th><th class="num">数量</th><th>站点</th><th>备注</th></tr></thead>
+          <tbody>
+            <tr><td>sensor produced no payload</td><td class="num">5</td><td class="host">bio-techne<br>crownmedia<br>lacity<br>rosebikes<br>usnews</td><td>脚本跑完，但没有产出 payload</td></tr>
+            <tr><td>solve 超时 125s</td><td class="num">4</td><td class="host">bmo.com<br>domain.com.au<br>gia.edu<br>esky.com</td><td>deadline 120s 打满</td></tr>
+            <tr><td>solve 被 403 拒</td><td class="num">3</td><td class="host">starhealth.in（308）<br>douglas.de（400）<br>emc.com（301）</td><td>IP / 边缘拒绝，复查仍 403</td></tr>
+            <tr><td>sandbox stalled</td><td class="num">3</td><td class="host">itv.com<br>princess.com<br>xcaret.com</td><td>V8 沙箱卡死</td></tr>
+            <tr><td>脚本执行错误</td><td class="num">1</td><td class="host">digital.panasonic.co.jp</td><td>ResourceError</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">补充样本另有 adidas.com/us 与官方 demo 站 matrix.leeclerk.org：<code>403 before any script ran</code>；zara / flaticon / nh-hotels 直接 <code>Unsupported</code> —— 壳里没有 sensor 脚本。</p>
+      <blockquote class="quote">“demo 完整”不等于“任意站可用”。官方 Lee County 脚本代码完整，唯一的问题是它依赖的站从本机 403 —— <em>脚本没机会执行</em>。</blockquote>
+    </div>
+  </section>
+
+  <section class="chapter" id="edge">
+    <div class="gutter"><span class="idx">08</span><span class="tag">Boundary</span></div>
+    <div class="body">
+      <h2>与 gatekit 的边界：互补，不重叠</h2>
+      <p>这次实测的结论不是“换掉 gatekit”，而是分工。</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th style="width:110px">维度</th><th>gatekit（eg_akamai）</th><th>wre</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">靶子</td><td>interstitial <code>bm-verify</code> 协议</td><td>classic V2/V3 sensor、pixel</td></tr>
+            <tr><td class="mono">手段</td><td>curl_cffi 单请求 + 协议 POST</td><td>V8 realm + 设备 / 行为 / 传输仿真</td></tr>
+            <tr><td class="mono">依赖</td><td>仅 curl_cffi</td><td>61MB sidecar + V8</td></tr>
+            <tr><td class="mono">验证样本</td><td>24 行 + 107 壳</td><td>268 站实测，3/27 validated</td></tr>
+            <tr><td class="mono">interstitial</td><td><span class="pill pass">主方案</span></td><td><span class="pill fail">Unsupported</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>结论：interstitial 语料继续走 gatekit；wre 只对“classic obfuscated sensor + curl 403 + 能产出 payload”的少数站有意义。</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="repro">
+    <div class="gutter"><span class="idx">09</span><span class="tag">Reproduce</span></div>
+    <div class="body">
+      <h2>复现命令</h2>
+      <p>全部命令从仓库根目录执行；先按 <code>wre/requirements.txt</code> 装好并激活 venv，输出统一写到 <code>wre/results/</code>。</p>
+      <pre class="code"><code># 激活 venv（cmd: .venv\Scripts\activate.bat / PowerShell: .venv\Scripts\Activate.ps1）
+
+# 单站：先 curl 对照，再 discover + solve + 复查
+python wre/scripts/probe.py  https://www.apahotel.com/ solve
+python wre/scripts/verify.py https://www.ibm.com/
+
+# 批量：读仓库内的 sites.csv
+python wre/scripts/screen2.py 0 70
+python wre/scripts/solve_batch2.py 0 6
+
+# 稳定性复跑，重建总表与可视化数据
+python wre/scripts/repeat2.py
+python wre/scripts/make_report_data.py
+python wre/scripts/build_visual_data.py</code></pre>
+      <p class="note">结果随出口 IP、时间与站点配置变化；这份快照只代表 2026-11-25 的观察，不代表长期可用性。</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="files">
+    <div class="gutter"><span class="idx">10</span><span class="tag">Files</span></div>
+    <div class="body">
+      <h2>脚本与数据</h2>
+      <div class="two-col">
+        <div class="scriptlist">
+          <div class="script"><span class="k">probe.py</span><span class="v">单站 discover / solve</span></div>
+          <div class="script"><span class="k">verify.py</span><span class="v">solve + 同 session 复查</span></div>
+          <div class="script"><span class="k">batch.py</span><span class="v">早期固定 5 站 discover</span></div>
+          <div class="script"><span class="k">screen.py</span><span class="v">第一批 51 候选扫描</span></div>
+          <div class="script"><span class="k">screen2.py</span><span class="v">读 sites.csv 批量扫描（增量）</span></div>
+          <div class="script"><span class="k">solve_batch.py</span><span class="v">旧批次 solve</span></div>
+          <div class="script"><span class="k">solve_batch2.py</span><span class="v">带 curl 对照的批量 solve</span></div>
+          <div class="script"><span class="k">repeat.py / repeat2.py</span><span class="v">稳定性复跑</span></div>
+          <div class="script"><span class="k">cookie_probe.py</span><span class="v">cookie vs TLS 对照实验</span></div>
+          <div class="script"><span class="k">official_demo.py</span><span class="v">官方 Lee County demo</span></div>
+          <div class="script"><span class="k">make_report_data.py</span><span class="v">合并 JSON → results_all.csv</span></div>
+          <div class="script"><span class="k">build_visual_data.py</span><span class="v">生成页面台账 report_data.js</span></div>
+          <div class="script"><span class="k">summary.py</span><span class="v">快速汇总打印</span></div>
+        </div>
+        <div class="scriptlist">
+          <div class="script"><span class="k">results_all.csv</span><span class="v">268 行总表</span></div>
+          <div class="script"><span class="k">screen_results.json</span><span class="v">51 条 discover 原始记录</span></div>
+          <div class="script"><span class="k">screen2_results.json</span><span class="v">217 条（累计 268）</span></div>
+          <div class="script"><span class="k">solve_results.json</span><span class="v">旧批次 5 站求解</span></div>
+          <div class="script"><span class="k">solve2_results.json</span><span class="v">27 个受保护站求解，含 curl 对照</span></div>
+          <div class="script"><span class="k">repeat_results.json</span><span class="v">APA ×3、akamai.com ×2</span></div>
+          <div class="script"><span class="k">repeat2_results.json</span><span class="v">IBM / BC / Tokopedia ×2</span></div>
+          <div class="script"><span class="k">venv/、wred.exe</span><span class="v">60MB+，本地隔离，不随仓库发布</span></div>
+          <div class="script"><span class="k">REPORT.md / README.md</span><span class="v">完整报告与专题导航；本页是可视化版</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="compliance">
+    <div class="gutter"><span class="idx">11</span><span class="tag">Compliance</span></div>
+    <div class="body">
+      <h2>边界与合规</h2>
+      <ul>
+        <li>样本来自 akamai.com 官网公开的 customer story 索引（<code>sites.csv</code>，268 主机，快照 2026-09-17），只访问公开首页。</li>
+        <li>串行、每站一次 GET，并发 ≤ 2；未登录、未触达付费内容或个人数据。</li>
+        <li>匿名首页会话 cookie 只在内存使用，未落盘。</li>
+        <li>不 vendor 二进制；venv 与 61MB <code>wred.exe</code> 不随仓库发布，台账只作为本专题证据，不用于声明 gatekit 的支持范围。</li>
+        <li>本专题不改变 gatekit 对 classic sensor / interstitial 的边界。</li>
+        <li>工具输出（<code>_abck</code> 等）只作为测试记录，不用于生产采集。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="chapter" id="ledger">
+    <div class="gutter"><span class="idx">12</span><span class="tag">Ledger</span></div>
+    <div class="body">
+      <h2>268 站台账</h2>
+      <p>全部扫描与求解记录。可按状态筛选，或搜索 host / 行业 / 地区；未求解的 241 个站只显示扫描结果。</p>
+      <div class="ledger-controls">
+        <div class="chips" role="group" aria-label="按状态筛选">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">全部 <span>268</span></button>
+          <button class="chip" type="button" data-filter="protected" aria-pressed="false">受保护 <span>27</span></button>
+          <button class="chip" type="button" data-filter="validated" aria-pressed="false">validated <span>3</span></button>
+          <button class="chip" type="button" data-filter="unvalidated" aria-pressed="false">unvalidated <span>8</span></button>
+          <button class="chip" type="button" data-filter="failed" aria-pressed="false">failed <span>16</span></button>
+          <button class="chip" type="button" data-filter="increment" aria-pressed="false">增量 <span>8</span></button>
+        </div>
+        <input class="search" id="ledger-q" type="search" placeholder="搜索 host / 行业 / 地区" aria-label="搜索台账">
+      </div>
+      <div class="ledger-wrap">
+        <table class="ledger-table">
+          <thead>
+            <tr><th>Host</th><th>状态</th><th class="num">curl</th><th class="num">_abck</th><th class="num">recheck</th><th>信号</th></tr>
+          </thead>
+          <tbody id="ledger-body"></tbody>
+        </table>
+      </div>
+      <p class="ledger-empty" id="ledger-empty" hidden>没有匹配的行。</p>
+      <div class="ledger-foot">
+        <span class="count" id="ledger-count">268 / 268 行</span>
+        <span class="only-wide">curl = 无 cookie 裸测 · _abck/recheck = wre 会话输出</span>
+        <span class="only-narrow">窄屏仅显示 host / 状态 / 信号；完整列见 results_all.csv</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span><b>wre 实测台账</b> · 2026-11-25 · 数据快照</span>
+    <span>wre/ · eg_akamai 子专题 · 完整记录见 REPORT.md</span>
+  </footer>
+</main>
+
+<script src="report_data.js"></script>
+<script>
+(function () {
+  var DATA = window.LEDGER || [];
+  var tbody = document.getElementById('ledger-body');
+  var q = document.getElementById('ledger-q');
+  var countEl = document.getElementById('ledger-count');
+  var empty = document.getElementById('ledger-empty');
+  var chips = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
+  var filter = 'all';
+
+  var VERDICT = {
+    validated: { label: 'validated', cls: 'pass' },
+    unvalidated: { label: 'unvalidated', cls: 'warn' },
+    failed: { label: 'failed', cls: 'fail' },
+    screened: { label: 'screened', cls: 'neutral' }
+  };
+
+  function matches(r, term) {
+    if (filter === 'protected' && r.p !== 1) return false;
+    if (filter === 'validated' && r.v !== 'validated') return false;
+    if (filter === 'unvalidated' && r.v !== 'unvalidated') return false;
+    if (filter === 'failed' && r.v !== 'failed') return false;
+    if (filter === 'increment' && !r.n) return false;
+    if (term) {
+      var hay = (r.h + ' ' + r.i + ' ' + r.l + ' ' + r.s).toLowerCase();
+      if (hay.indexOf(term) === -1) return false;
+    }
+    return true;
+  }
+
+  function cell(text, cls) {
+    var td = document.createElement('td');
+    td.textContent = text;
+    if (cls) td.className = cls;
+    return td;
+  }
+
+  function render() {
+    var term = q.value.trim().toLowerCase();
+    var rows = DATA.filter(function (r) { return matches(r, term); });
+    var frag = document.createDocumentFragment();
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+
+      var tdHost = document.createElement('td');
+      tdHost.className = 'host-cell';
+      var host = document.createElement('span');
+      host.className = 'host';
+      host.textContent = r.h;
+      tdHost.appendChild(host);
+      var subText = [r.i, r.l].filter(Boolean).join(' · ');
+      if (subText) {
+        var sub = document.createElement('span');
+        sub.className = 'host-sub';
+        sub.textContent = subText;
+        tdHost.appendChild(sub);
+      }
+      tr.appendChild(tdHost);
+
+      var tdV = document.createElement('td');
+      var v = VERDICT[r.v] || { label: r.v, cls: 'neutral' };
+      var pill = document.createElement('span');
+      pill.className = 'pill ' + v.cls;
+      pill.textContent = v.label;
+      tdV.appendChild(pill);
+      tr.appendChild(tdV);
+
+      tr.appendChild(cell(r.c || '—', 'num'));
+      tr.appendChild(cell(r.a || '—', 'num'));
+      tr.appendChild(cell(r.r || '—', 'num'));
+
+      var tdS = document.createElement('td');
+      if (r.n) {
+        var b = document.createElement('span');
+        b.className = 'inc';
+        b.textContent = r.n.replace('->', ' → ');
+        tdS.appendChild(b);
+      } else {
+        tdS.textContent = '—';
+        tdS.className = 'muted';
+      }
+      tr.appendChild(tdS);
+
+      frag.appendChild(tr);
+    });
+    tbody.replaceChildren(frag);
+    countEl.textContent = rows.length + ' / ' + DATA.length + ' 行';
+    empty.hidden = rows.length > 0;
+  }
+
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      filter = chip.getAttribute('data-filter');
+      chips.forEach(function (c) {
+        c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+      });
+      render();
+    });
+  });
+  q.addEventListener('input', render);
+  render();
+})();
+</script>

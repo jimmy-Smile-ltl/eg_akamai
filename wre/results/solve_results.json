@@ -1,0 +1,108 @@
+[
+ {
+  "host": "digital.panasonic.co.jp",
+  "url": "https://digital.panasonic.co.jp/",
+  "sensor": "sensor",
+  "solve_error": "InternalError: internal in akamai.solve: the sensor produced no payload",
+  "recheck_status": 200,
+  "recheck_refused": false,
+  "recheck_len": 36183,
+  "marks": {
+   "challenge": false,
+   "access denied": false,
+   "captcha": false,
+   "bm-verify": false,
+   "denied": false
+  },
+  "title": "パナソニック デジタル株式会社"
+ },
+ {
+  "host": "www.ana.co.jp",
+  "url": "https://www.ana.co.jp/",
+  "sensor": "obfuscated",
+  "solve_secs": 52.3,
+  "machine": "Apple M3 Max, 14 cores, 36 GB",
+  "abck_status": "-1",
+  "abck_validated": false,
+  "abck_rejected": true,
+  "posts": 183,
+  "telemetry_bytes": 7440,
+  "pow_field": "-1",
+  "recheck_status": 200,
+  "recheck_refused": false,
+  "recheck_len": 705237,
+  "marks": {
+   "challenge": true,
+   "access denied": false,
+   "captcha": false,
+   "bm-verify": false,
+   "denied": false
+  },
+  "title": "ANAの航空券・飛行機 予約、空席照会、運賃案内|ANA"
+ },
+ {
+  "host": "www.apahotel.com",
+  "url": "https://www.apahotel.com/",
+  "sensor": "obfuscated",
+  "solve_secs": 34.4,
+  "machine": "Apple M2 Pro, 10 cores, 32 GB",
+  "abck_status": "-1",
+  "abck_validated": false,
+  "abck_rejected": true,
+  "posts": 15,
+  "telemetry_bytes": 8291,
+  "pow_field": "-1",
+  "recheck_status": 200,
+  "recheck_refused": false,
+  "recheck_len": 482440,
+  "marks": {
+   "challenge": false,
+   "access denied": false,
+   "captcha": false,
+   "bm-verify": false,
+   "denied": false
+  },
+  "title": "【公式】アパ直なら、比較なしで最安値。【新都市型ホテル｜ビジネスホテル】#アパホテル"
+ },
+ {
+  "host": "bmo.com",
+  "url": "https://bmo.com/",
+  "sensor": "obfuscated",
+  "solve_secs": 113.0,
+  "machine": "Apple M3 Pro, 12 cores, 18 GB",
+  "abck_status": "-1",
+  "abck_validated": false,
+  "abck_rejected": true,
+  "posts": 4,
+  "telemetry_bytes": 5316,
+  "pow_field": "-1",
+  "recheck_status": 200,
+  "recheck_refused": false,
+  "recheck_len": 52993,
+  "marks": {
+   "challenge": false,
+   "access denied": false,
+   "captcha": false,
+   "bm-verify": false,
+   "denied": false
+  },
+  "title": "Country Selector - BMO"
+ },
+ {
+  "host": "www.bio-techne.com",
+  "url": "https://www.bio-techne.com/",
+  "sensor": "obfuscated",
+  "solve_error": "InternalError: internal in akamai.solve: the sensor produced no payload",
+  "recheck_status": 200,
+  "recheck_refused": false,
+  "recheck_len": 81286,
+  "marks": {
+   "challenge": false,
+   "access denied": false,
+   "captcha": false,
+   "bm-verify": false,
+   "denied": false
+  },
+  "title": "Bio-Techne - Together, we elevate science to the next level of possibility"
+ }
+]

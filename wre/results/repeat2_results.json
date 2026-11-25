@@ -1,0 +1,62 @@
+[
+ {
+  "url": "https://www.ibm.com/",
+  "run": 1,
+  "secs": 7.6,
+  "abck": "0",
+  "validated": true,
+  "posts": 10,
+  "recheck": 200,
+  "len": 214173
+ },
+ {
+  "url": "https://www.ibm.com/",
+  "run": 2,
+  "secs": 7.6,
+  "abck": "0",
+  "validated": true,
+  "posts": 10,
+  "recheck": 200,
+  "len": 214173
+ },
+ {
+  "url": "https://www.britishcouncil.org/",
+  "run": 1,
+  "secs": 7.4,
+  "abck": "0",
+  "validated": true,
+  "posts": 18,
+  "recheck": 200,
+  "len": 101830
+ },
+ {
+  "url": "https://www.britishcouncil.org/",
+  "run": 2,
+  "secs": 6.0,
+  "abck": "-1",
+  "validated": false,
+  "posts": 15,
+  "recheck": 200,
+  "len": 101830
+ },
+ {
+  "url": "https://www.tokopedia.com/",
+  "run": 1,
+  "secs": 9.4,
+  "abck": "0",
+  "validated": true,
+  "posts": 14,
+  "recheck": 200,
+  "len": 113762
+ },
+ {
+  "url": "https://www.tokopedia.com/",
+  "run": 2,
+  "secs": 6.4,
+  "abck": "0",
+  "validated": true,
+  "posts": 15,
+  "recheck": 200,
+  "len": 113417
+ }
+]

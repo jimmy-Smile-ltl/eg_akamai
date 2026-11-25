@@ -13,7 +13,7 @@
 ![Offline tests](https://img.shields.io/badge/offline%20tests-30%2F30-brightgreen)
 ![Runtime](https://img.shields.io/badge/runtime-curl__cffi-000000)
 
-[快速开始](#快速开始) · [目录地图](#目录地图) · [能力边界](#能力边界) · [结果怎么读](#结果怎么读) · [文档](#文档)
+[快速开始](#快速开始) · [目录地图](#目录地图) · [能力边界](#能力边界) · [结果怎么读](#结果怎么读) · [wre 专题](wre/README.md) · [文档](#文档)
 
 </div>
 
@@ -23,6 +23,8 @@
 > 那个 HTTP 200、2–7 KB、带一次性 `bm-verify` 令牌的壳。
 > classic sensor、reCAPTCHA / PoW 挑战、PX / Cloudflare / DataDome / AWS WAF
 > 都只识别、不求解，也不计入通过率。
+>
+> `wre/` 目录是独立的第三方工具评估专题（classic sensor），不属于 gatekit 的能力。
 
 ## 30 秒看懂
 
@@ -109,6 +111,7 @@ eg_akamai/
 ├── data/fixtures/            # 10 份脱敏夹具（7 真实 + 3 构造）
 ├── examples/                 # 24 行真实样本账本
 ├── datasets/                 # akamai.com 公开客户清单 + 采集/检测脚本
+├── wre/                      # 第三方工具 web-re-toolkit 的 Akamai 实践专题
 └── tests/                    # 30 条离线断言（不联网）
 ```
 
@@ -119,11 +122,14 @@ eg_akamai/
 | [`data/fixtures/`](data/README.md) | 脱敏后的真实/构造响应，只用于离线判据测试 | [MANIFEST](data/fixtures/MANIFEST.md) | ✅ 仅夹具 |
 | [`examples/`](examples/README.md) | 24 行真实 sweep 摘录，覆盖五种桶，可复现根 README 的数字 | [README](examples/README.md) | ✅ |
 | [`datasets/`](datasets/README.md) | akamai.com 官网公开客户案例（304 条 / 268 主机）及采集脚本 | [README](datasets/akamai_customers/README.md) | ✅ 仅元数据 |
+| [`wre/`](wre/README.md) | 第三方工具 web-re-toolkit 的 Akamai 实践：268 站台账、测试脚本、报告 | [README](wre/README.md) | ✅ 结论与脚本（不 vendor 二进制） |
 | [`tests/`](tests/README.md) | 30 条离线断言，钉住判据与五桶分母 | `test_offline.py` | ✅ |
 
 仓库里**没有**全量扫描语料、扫描得到的站点清单、有效 cookie / token。
-它们生成在本地 `data/` 下并被 `.gitignore` 排除，原因见
-[docs/BOUNDARIES.md](docs/BOUNDARIES.md) 第 6 节。
+唯一例外是 [`wre/`](wre/README.md) 专题保留的 268 主机一次性评估台账：样本就是
+`datasets/` 的公开客户清单，记录只有状态与 verdict，不含 cookie / token；它用于
+复查第三方工具，不是 gatekit 的扫描语料。其余本地产物生成在 `data/` 下并被
+`.gitignore` 排除，原因见 [docs/BOUNDARIES.md](docs/BOUNDARIES.md) 第 6 节。
 
 ## 能力边界
 
@@ -140,6 +146,8 @@ eg_akamai/
 | 登录 / 付费墙 / 人机验证 | ❌ | 不在范围 |
 
 完整清单与已知启发式缺陷见 [docs/BOUNDARIES.md](docs/BOUNDARIES.md)。
+`gatekit` 自身不支持 classic sensor；[`wre/`](wre/README.md) 是对第三方工具的
+独立评估，不改变这张表。
 
 ## 结果怎么读
 
@@ -222,6 +230,11 @@ akamai.com 自己列出的案例，见 [`datasets/akamai_customers/`](datasets/a
 的首页级检测里，273 条网址只有 100 条还能看到 Akamai 信号。也不是本地那份
 282 万的第三方候选池。字段、口径和复现方式见
 [datasets/akamai_customers/README.md](datasets/akamai_customers/README.md)。
+
+[`wre/`](wre/README.md) 专题用这份 268 主机名单做过一次第三方工具
+`wre-client-akamai` 的评估（2026-11-25）：27 个站仍报 protected，3 个产出
+validated `_abck`，2 个出现 curl 403 → 200 的真实增量。台账、脚本与完整报告
+都在专题目录里。
 
 ## 数据与合规
 
